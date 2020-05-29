@@ -1,5 +1,8 @@
 # cristal-3d
 
+Modèles 3D de cristallisation à imprimer en 3D
+Atomes et vides entre les atomes
+
 ## Modèles fabriqués et assemblés
 ![real](https://github.com/olivier-boesch/cristal-3d/raw/master/real_models.jpeg)
 
