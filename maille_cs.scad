@@ -9,7 +9,7 @@
 */
 
 //finesse de rendu
-$fn=100;
+$fn=$preview?50:100;
 
 //tolérance pour impression
 // <0 pour que les sphère rentre un peu les unes dans les autres
@@ -53,11 +53,33 @@ module maille_cs(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
 module vide_maille_cs(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
     Amaille = 2*(Ratome+tol);
     difference(){
-        cube([Nx*Amaille-0.01,Ny*Amaille-0.01,Nz*Amaille-0.01], center=true);
+        cube([Nx*Amaille-0.05,Ny*Amaille-0.05,Nz*Amaille-0.05], center=true);
         maille_cs(Ratome=Ratome, tol=tol, Nx=Nx, Ny=Ny, Nz=Nz);
     }
 }
 
-maille_cs(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
+module demi_atome(Ratome=10){
+    difference(){
+        sphere(Ratome);
+        translate([-Ratome-0.5,-Ratome-0.5,0]) cube(2*Ratome+1);
+    }
+}
 
-translate([Rayon_atome_echelle*3,0,0]) vide_maille_cs(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
+module trois_huitiemes_atome(Ratome=10){
+    difference(){
+        demi_atome(Ratome=Ratome);
+        translate([0,-Ratome-1,-Ratome-0.5]) cube(Ratome+1);
+    }
+}
+
+module quart_atome(Ratome=10){
+    difference(){
+        demi_atome(Ratome=Ratome);
+        translate([-Ratome-0.5,0,-Ratome-1]) cube(2*Ratome+1);
+    }
+}
+
+translate([-50,0,0])demi_atome(Ratome=Rayon_atome_echelle);
+translate([-100,0,0]) trois_huitiemes_atome(Ratome=Rayon_atome_echelle);
+maille_cs(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
+translate([50,0,0]) vide_maille_cs(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
