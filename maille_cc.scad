@@ -65,6 +65,23 @@ module vide_maille_cc(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
     }
 }
 
+module demi_atome(Ratome=10){
+    difference(){
+        sphere(Ratome);
+        translate([-Ratome-0.5,-Ratome-0.5,0]) cube(2*Ratome+1);
+    }
+}
+
+module trois_huitiemes_atome(Ratome=10){
+    difference(){
+        demi_atome(Ratome=Ratome);
+        translate([0,-Ratome-1,-Ratome-0.5]) cube(Ratome+1);
+    }
+}
+
+translate([-Rayon_atome_echelle*3,0,0])  demi_atome(Ratome=Rayon_atome_echelle);
+translate([-Rayon_atome_echelle*6,0,0])  trois_huitiemes_atome(Ratome=Rayon_atome_echelle);
+
 maille_cc(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
 
 translate([Rayon_atome_echelle*3,0,0]) vide_maille_cc(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
