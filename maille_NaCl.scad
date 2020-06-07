@@ -60,5 +60,30 @@ module vide_maille_NaCl(){
     }
 }
 
+module demi_atome(Ratome=10){
+    difference(){
+        sphere(Ratome);
+        translate([-Ratome-0.5,-Ratome-0.5,0]) cube(2*Ratome+1);
+    }
+}
+
+module trois_huitiemes_atome(Ratome=10){
+    difference(){
+        demi_atome(Ratome=Ratome);
+        translate([0,-Ratome-1,-Ratome-0.5]) cube(Ratome+1);
+    }
+}
+
+module quart_atome(Ratome=10){
+    difference(){
+        demi_atome(Ratome=Ratome);
+        translate([-Ratome-0.5,0,-Ratome-1]) cube(2*Ratome+1);
+    }
+}
+
 maille_NaCl();
 translate([80,0,0]) vide_maille_NaCl();
+translate([-50,0,0]) color("grey") demi_atome(Ratome=RNa);
+translate([-75,0,0]) color("grey") trois_huitiemes_atome(Ratome=RNa);
+translate([-110,0,0]) color("green") demi_atome(Ratome=RCl);
+translate([-150,0,0]) color("green") quart_atome(Ratome=RCl);
