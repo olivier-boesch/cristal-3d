@@ -11,7 +11,7 @@
 echelle = 1; //cm <-> 1ang
 
 //finesse de rendu
-$fn=$preview?50:100;
+$fn=$preview?50:120;
 
 //Rayon des atomes
 // Sodium
@@ -82,7 +82,7 @@ module quart_atome(Ratome=10){
 }
 
 maille_NaCl();
-translate([80,0,0]) vide_maille_NaCl();
+//translate([80,0,0]) vide_maille_NaCl();
 translate([-50,0,0]) color("grey") demi_atome(Ratome=RNa);
 translate([-75,0,0]) color("grey") trois_huitiemes_atome(Ratome=RNa);
 translate([-110,0,0]) color("green") demi_atome(Ratome=RCl);

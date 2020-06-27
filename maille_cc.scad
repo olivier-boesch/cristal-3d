@@ -4,12 +4,12 @@
     Pour impression 3D
 
     Olivier Boesch - Lycée Saint Exupéry - Marseille - 2020
-    License CC-BY-NC-SA
+    License CC-BY-NC-SA 4.0
 
 */
 
 //finesse de rendu
-$fn=100;
+$fn=$preview?60:150;
 
 //tolérance pour impression
 // <0 pour que les sphère rentre un peu les unes dans les autres
@@ -28,9 +28,12 @@ Nx=1;
 Ny=1;
 Nz=1;
 
+//calcul du paramètre de maille
+function a_maille(Ratome, tol) = 4*(Ratome+tol)/sqrt(3);
+
 //tracé des atomes de la maille
 module atomes_maille_cc(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
-    Amaille = 4*(Ratome+tol)/sqrt(3);
+    Amaille = a_maille(Ratome, tol);
     for (i=[0:Nx]){
         for (j=[0:Ny]){
             for (k=[0:Nz*2]){
@@ -49,7 +52,7 @@ module atomes_maille_cc(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
 
 //tracé de la maille
 module maille_cc(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
-    Amaille = 4*(Ratome+tol)/sqrt(3);
+    Amaille = a_maille(Ratome, tol);
     intersection(){
         translate([-Nx*Amaille/2,-Ny*Amaille/2,-Nz*Amaille/2]) atomes_maille_cc(Ratome=Ratome,tol=tol,Nx=Nx, Ny=Ny, Nz=Nz);
         cube([Nx*Amaille,Ny*Amaille,Nz*Amaille], center=true);
@@ -58,9 +61,10 @@ module maille_cc(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
 
 //tracé du vide de la maille
 module vide_maille_cc(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
-    Amaille = 4*(Ratome+tol)/sqrt(3);
+    Amaille = a_maille(Ratome, tol);
+    tolerance_decoupe=-0.01;
     difference(){
-        cube([Nx*Amaille-0.01,Ny*Amaille-0.01,Nz*Amaille-0.01], center=true);
+        cube([Nx*Amaille+tolerance_decoupe,Ny*Amaille+tolerance_decoupe,Nz*Amaille+tolerance_decoupe], center=true);
         maille_cc(Ratome=Ratome, tol=tol, Nx=Nx, Ny=Ny, Nz=Nz);
     }
 }
@@ -84,4 +88,4 @@ translate([-Rayon_atome_echelle*6,0,0])  trois_huitiemes_atome(Ratome=Rayon_atom
 
 maille_cc(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
 
-translate([Rayon_atome_echelle*3,0,0]) vide_maille_cc(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
+//translate([Rayon_atome_echelle*3,0,0]) vide_maille_cc(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);

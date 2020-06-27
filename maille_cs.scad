@@ -9,7 +9,7 @@
 */
 
 //finesse de rendu
-$fn=$preview?50:100;
+$fn=$preview?50:150;
 
 //tolérance pour impression
 // <0 pour que les sphère rentre un peu les unes dans les autres
@@ -28,9 +28,12 @@ Nx=1;
 Ny=1;
 Nz=1;
 
+//Calcul du paramètre de la maille
+function a_maille(Ratome, tol) = 2*(Ratome+tol);
+
 //tracé des atomes d'une maille
 module atomes_maille_cs(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
-    Amaille = 2*(Ratome+tol);
+    Amaille = a_maille(Ratome, tol);
     for (i=[0:Nx]){
         for (j=[0:Ny]){
             for (k=[0:Nz]){
@@ -42,7 +45,7 @@ module atomes_maille_cs(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
 
 //tracé de la maille seule
 module maille_cs(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
-    Amaille = 2*(Ratome+tol);
+    Amaille = a_maille(Ratome, tol);
     intersection(){
         translate([-Nx*Amaille/2,-Ny*Amaille/2,-Nz*Amaille/2]) atomes_maille_cs(Ratome=Ratome,tol=tol,Nx=Nx, Ny=Ny, Nz=Nz);
         cube([Nx*Amaille,Ny*Amaille,Nz*Amaille], center=true);
@@ -51,7 +54,7 @@ module maille_cs(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
 
 //tracé du vide de la maille seule
 module vide_maille_cs(Ratome=10, tol=0, Nx=1, Ny=1, Nz=1){
-    Amaille = 2*(Ratome+tol);
+    Amaille = a_maille(Ratome, tol);
     difference(){
         cube([Nx*Amaille-0.05,Ny*Amaille-0.05,Nz*Amaille-0.05], center=true);
         maille_cs(Ratome=Ratome, tol=tol, Nx=Nx, Ny=Ny, Nz=Nz);
@@ -82,4 +85,4 @@ module quart_atome(Ratome=10){
 translate([-50,0,0])demi_atome(Ratome=Rayon_atome_echelle);
 translate([-100,0,0]) trois_huitiemes_atome(Ratome=Rayon_atome_echelle);
 maille_cs(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
-translate([50,0,0]) vide_maille_cs(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
+//translate([50,0,0]) vide_maille_cs(Ratome=Rayon_atome_echelle, tol=tolerance, Nx=Nx, Ny=Ny, Nz=Nz);
